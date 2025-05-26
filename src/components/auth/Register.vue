@@ -7,7 +7,7 @@ import {
 } from '@/utils/validators'
 import { ref } from 'vue'
 import { useRegister } from '@/composables/register'
-
+import AppAlert from '../commons/AppAlert.vue'
 const { formData, formAction, refVForm, onFormSubmit } = useRegister()
 
 const isPasswordVisible = ref(false)
@@ -15,6 +15,11 @@ const isPasswordConfirmVisible = ref(false)
 </script>
 
 <template>
+  <AppAlert
+    :form-success-message="formAction.formSuccessMessage"
+    :form-error-message="formAction.formErrorMessage"
+  ></AppAlert>
+
   <v-form ref="refVForm" @submit.prevent="onFormSubmit">
     <v-row dense>
       <v-col cols="12" sm="6">

@@ -36,7 +36,7 @@ export function useLogin() {
     } else if (data) {
       // Add Success Message
       formAction.value.formSuccessMessage = 'Successfully Logged Account.'
-      router.replace('/feed')
+      router.replace('/dashboard')
     }
 
     // Reset Form

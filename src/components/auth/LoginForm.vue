@@ -2,13 +2,18 @@
 import { ref } from 'vue'
 import { useLogin } from '@/composables/login'
 import { requiredValidator, emailValidator } from '@/utils/validators'
+import AppAlert from '../commons/AppAlert.vue'
 
+// Load variables
 const { formData, formAction, refVForm, onFormSubmit } = useLogin()
 const isPasswordVisible = ref(false)
 </script>
 
 <template>
-  <!-- pending alert -->
+  <AppAlert
+    :form-success-message="formAction.formSuccessMessage"
+    :form-error-message="formAction.formErrorMessage"
+  ></AppAlert>
   <v-form ref="refVForm" @submit.prevent="onFormSubmit">
     <v-row dense>
       <v-col cols="12">
