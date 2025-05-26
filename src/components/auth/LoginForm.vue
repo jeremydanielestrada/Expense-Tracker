@@ -8,7 +8,7 @@ const isPasswordVisible = ref(false)
 </script>
 
 <template>
-  //Pending Alert Features
+  <!-- pending alert -->
   <v-form ref="refVForm" @submit.prevent="onFormSubmit">
     <v-row dense>
       <v-col cols="12">
@@ -36,7 +36,7 @@ const isPasswordVisible = ref(false)
     <v-btn
       class="mt-2"
       type="submit"
-      color="light-green-darken-3"
+      color="cyan-darken-3"
       prepend-icon="mdi-login"
       :disabled="formAction.formProcess"
       :loading="formAction.formProcess"

@@ -72,7 +72,7 @@ const isPasswordConfirmVisible = ref(false)
     <v-btn
       class="mt-2"
       type="submit"
-      color="light-green-darken-3"
+      color="cyan-darken-3"
       prepend-icon="mdi-account-plus"
       :disabled="formAction.formProcess"
       :loading="formAction.formProcess"
