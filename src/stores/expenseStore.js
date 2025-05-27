@@ -1,20 +1,24 @@
 import { defineStore } from 'pinia'
+import { supabase } from '@/utils/supabase'
 import { ref } from 'vue'
 
 export const useExpenseStore = defineStore('expenseStore', () => {
   //States
   const expenses = ref([])
+  const isLoading = ref(false)
 
   //Get all expense from data base
   async function getAllExpenses() {
+    isLoading.value = true
     const { data, error } = await supabase.from('expenses').select('*')
 
-    if (error) throw error('Failed to load Expenses')
     expenses.value = data
+
+    if (error) throw error('Failed to load Expenses')
   }
 
   //Add expenses
-  async function addExpenses(user_id) {
+  async function addExpenses() {
     const {
       data: { user },
       error: userError,
@@ -33,7 +37,7 @@ export const useExpenseStore = defineStore('expenseStore', () => {
           title,
           amount,
           category,
-          date,
+          date: Date.now().toString(),
           description,
         },
       ])
@@ -63,6 +67,7 @@ export const useExpenseStore = defineStore('expenseStore', () => {
 
   return {
     expenses,
+    isLoading,
     getAllExpenses,
     addExpenses,
     updateExpense,
