@@ -18,7 +18,7 @@ export const useExpenseStore = defineStore('expenseStore', () => {
   }
 
   //Add expenses
-  async function addExpenses() {
+  async function addExpenses({ title, amount, category, description, date }) {
     const {
       data: { user },
       error: userError,
@@ -35,16 +35,19 @@ export const useExpenseStore = defineStore('expenseStore', () => {
         {
           user_id: user.id,
           title,
-          amount,
+          amount: Number(amount),
           category,
-          date: Date.now().toString(),
+          date: date || new Date().toISOString(),
           description,
         },
       ])
       .select()
 
-    if (error) throw new Error('Failed to add Expense')
-    // Optionally, refresh the list
+    if (error) {
+      console.error('Supabase insert error:', error)
+      throw new Error('Failed to add Expense')
+    }
+
     await getAllExpenses()
     return data
   }
