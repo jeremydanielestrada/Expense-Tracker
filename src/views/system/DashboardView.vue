@@ -99,7 +99,7 @@ const openEditDialog = (id) => {
                   <v-btn icon @click="expenseStore.deleteExpense(expense.id)">
                     <v-icon>mdi-trash-can-outline</v-icon>
                   </v-btn>
-                  <v-btn icon @click="openEditDialog(id)">
+                  <v-btn icon @click="openEditDialog(expense.id)">
                     <v-icon>mdi-pencil-outline</v-icon>
                   </v-btn>
                 </div>

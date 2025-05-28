@@ -15,7 +15,7 @@ const isLoading = ref(false)
 
 const formData = ref({
   title: '',
-  amount: '',
+  amount: 0,
   categoryOptions: ['Foods', 'Bill', 'Others'],
   categorySelected: '',
   description: '',
