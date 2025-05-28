@@ -14,10 +14,10 @@ const sampleValue = ref(30)
         <v-row>
           <v-col cols="12" sm="6">
             <v-card>
-              <v-card-text>
+              <v-card-text class="d-flex align-center ga-10">
                 <div class="d-flex flex-column ga-2">
                   <div>
-                    <span class="mr-2">Foods</span>
+                    <span class="mr-4">Foods</span>
                     <v-progress-circular
                       rotate="360"
                       v-model="sampleValue"
@@ -30,7 +30,7 @@ const sampleValue = ref(30)
                   </div>
 
                   <div>
-                    <span>Bills</span>
+                    <span class="mr-7">Bills</span>
                     <v-progress-circular
                       rotate="360"
                       v-model="sampleValue"
@@ -42,7 +42,7 @@ const sampleValue = ref(30)
                     </v-progress-circular>
                   </div>
                   <div>
-                    <span>Others</span>
+                    <span class="mr-4">Others</span>
                     <v-progress-circular
                       rotate="360"
                       v-model="sampleValue"
@@ -53,6 +53,10 @@ const sampleValue = ref(30)
                       {{ sampleValue }}%
                     </v-progress-circular>
                   </div>
+                </div>
+                <div class="text-center">
+                  <h1>400</h1>
+                  <h3>TOTAL AMOUNT</h3>
                 </div>
               </v-card-text>
             </v-card>
