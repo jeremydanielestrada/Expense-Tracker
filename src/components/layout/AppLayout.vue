@@ -3,10 +3,8 @@ import { ref } from 'vue'
 import { useAuthUserStore } from '@/stores/authStore'
 import { onMounted } from 'vue'
 import SideProfileNavigation from '@/components/layout/SideProfileNavigation.vue'
-import ExpenseDialog from '@/views/Partials/ExpenseDialog.vue'
 
 const isSideNavigation = ref(false)
-const addExpense = ref(false)
 
 //Use Pinia Store
 const authStore = useAuthUserStore()
@@ -58,29 +56,6 @@ onMounted(() => {
       <v-main>
         <slot name="content"></slot>
       </v-main>
-
-      <v-fab
-        icon
-        v-if="isLoggedIn"
-        @click="addExpense = true"
-        class="fab-bottom-center"
-        color="cyan-darken-3"
-        ripple
-      >
-        <v-icon>mdi-plus</v-icon>
-      </v-fab>
-
-      <ExpenseDialog v-model="addExpense"></ExpenseDialog>
     </v-app>
   </v-responsive>
 </template>
-
-<style scoped>
-.fab-bottom-center {
-  position: fixed;
-  left: 50%;
-  bottom: 32px; /* adjust as needed */
-  transform: translateX(-50%);
-  z-index: 1000;
-}
-</style>
