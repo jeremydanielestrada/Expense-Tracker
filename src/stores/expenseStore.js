@@ -60,6 +60,18 @@ export const useExpenseStore = defineStore('expenseStore', () => {
     return data
   }
 
+  // Get a single expense by ID
+  async function getExpenseById(id) {
+    const { data, error } = await supabase.from('expenses').select('*').eq('id', id).single()
+
+    if (error) {
+      console.error('Error fetching expense:', error)
+      throw new Error('Failed to fetch Expense')
+    }
+
+    return data
+  }
+
   // Delete an expense
   async function deleteExpense(id) {
     const { error } = await supabase.from('expenses').delete().eq('id', id)
@@ -75,5 +87,6 @@ export const useExpenseStore = defineStore('expenseStore', () => {
     addExpenses,
     updateExpense,
     deleteExpense,
+    getExpenseById,
   }
 })
