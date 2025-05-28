@@ -2,7 +2,6 @@
 import { ref } from 'vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import ExpenseDialog from '@/views/Partials/ExpenseDialog.vue'
-
 const addExpense = ref(false)
 </script>
 

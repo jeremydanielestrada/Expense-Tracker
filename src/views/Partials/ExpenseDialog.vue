@@ -84,7 +84,7 @@ const addExpense = async () => {
           :rules="[requiredValidator]"
         />
         <v-textarea
-          label="Text"
+          label="Description"
           v-model="formData.description"
           clearable
           :rules="[requiredValidator]"
