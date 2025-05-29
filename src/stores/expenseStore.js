@@ -1,11 +1,42 @@
 import { defineStore } from 'pinia'
 import { supabase } from '@/utils/supabase'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 export const useExpenseStore = defineStore('expenseStore', () => {
   //States
   const expenses = ref([])
   const isLoading = ref(false)
+
+  //Getters
+
+  // Total amount of all expenses
+  const totalAmount = computed(() => {
+    return expenses.value.reduce((sum, item) => sum + Number(item.amount), 0)
+  })
+
+  //Category totals
+  const categoryBreakdown = computed(() => {
+    const result = {}
+    expenses.value.forEach((item) => {
+      const category = item.category
+      if (!result[category]) result[category] = 0
+      result[category] += Number(item.amount)
+    })
+    return result
+  })
+
+  // Category percentages
+  const categoryPercentages = computed(() => {
+    const total = totalAmount.value
+    const breakdown = categoryBreakdown.value
+    const percentages = {}
+
+    for (const category in breakdown) {
+      percentages[category] = total > 0 ? ((breakdown[category] / total) * 100).toFixed(1) : 0
+    }
+
+    return percentages
+  })
 
   //Get all expense from data base
   async function getAllExpenses() {
@@ -83,6 +114,9 @@ export const useExpenseStore = defineStore('expenseStore', () => {
   return {
     expenses,
     isLoading,
+    totalAmount,
+    categoryBreakdown,
+    categoryPercentages,
     getAllExpenses,
     addExpenses,
     updateExpense,
