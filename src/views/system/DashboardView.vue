@@ -48,10 +48,9 @@ const openEditDialog = (id) => {
 
                   <div class="d-flex align-center">
                     <v-progress-circular
-                      rotate="360"
-                      :value="percent"
-                      size="100"
-                      width="15"
+                      :model-value="percent"
+                      :size="100"
+                      :width="15"
                       :color="getCategoryColor(category)"
                     >
                       {{ percent }}%
@@ -92,15 +91,16 @@ const openEditDialog = (id) => {
               </v-card-title>
               <v-card-text>
                 <p>{{ expense.description }}</p>
-                <p>
+                <strong class="text-h6">
                   {{
                     Number(expense.amount).toLocaleString('en-US', {
                       style: 'currency',
                       currency: 'PHP',
                     })
                   }}
-                </p>
+                </strong>
               </v-card-text>
+              <v-divider></v-divider>
               <v-card-actions class="d-flex justify-space-between">
                 <p>{{ expense.date }}</p>
                 <div class="d-flex align-center">
