@@ -4,8 +4,24 @@ import AppLayout from '@/components/layout/AppLayout.vue'
 import { useExpenseStore } from '@/stores/expenseStore'
 import EditExpenseDialog from '../partials/EditExpenseDialog.vue'
 import ExpenseDialog from '../partials/ExpenseDialog.vue'
+import AlertNotifications from '@/components/commons/AlertNotifications.vue'
 
 const expenseStore = useExpenseStore()
+
+const addExpense = ref(false)
+const editExpense = ref(false)
+const selectedExpenseId = ref(null)
+
+const isItemeDeleted = ref(true)
+
+const deleteItem = async () => {
+  try {
+    await expenseStore.deleteExpense(expenseId)
+    isItemeDeleted.value = true
+  } catch {
+    isItemeDeleted.value = false
+  }
+}
 
 onMounted(async () => {
   await expenseStore.getAllExpenses()
@@ -21,10 +37,6 @@ function getCategoryColor(category) {
   return colorMap[category] || 'cyan-accent-3'
 }
 
-const addExpense = ref(false)
-const editExpense = ref(false)
-const selectedExpenseId = ref(null)
-
 const openEditDialog = (id) => {
   selectedExpenseId.value = id
   editExpense.value = true
@@ -34,87 +46,79 @@ const openEditDialog = (id) => {
 <template>
   <AppLayout>
     <template #content>
-      <v-container>
-        <v-row>
-          <v-col cols="12" sm="6">
-            <v-card>
-              <v-card-text class="d-flex align-center justify-center text-center ga-6">
-                <div
-                  v-for="(percent, category) in expenseStore.categoryPercentages"
-                  :key="category"
-                  class="d-flex flex-column ga-4"
+      <AlertNotifications
+        :succes-delete="isItemeDeleted"
+        :error-delete="isItemeDeleted"
+      ></AlertNotifications>
+      <v-container fluid class="mobile-layout pa-0">
+        <!-- Fixed Progress Section -->
+        <div class="progress-section">
+          <v-card>
+            <v-card-text class="text-center d-flex align-center justify-space-between">
+              <div
+                v-for="(percent, category) in expenseStore.categoryPercentages"
+                :key="category"
+                class="mb-4 d-flex align-center flex-column"
+              >
+                <v-chip :color="getCategoryColor(category)" class="ma-2">{{ category }}</v-chip>
+                <v-progress-circular
+                  :model-value="percent"
+                  :size="80"
+                  :width="10"
+                  :color="getCategoryColor(category)"
                 >
-                  <strong class="mr-3">{{ category }}</strong>
-
-                  <div class="d-flex align-center">
-                    <v-progress-circular
-                      :model-value="percent"
-                      :size="100"
-                      :width="15"
-                      :color="getCategoryColor(category)"
-                    >
-                      {{ percent }}%
-                    </v-progress-circular>
-                  </div>
-                </div>
-              </v-card-text>
-              <div class="text-center ma-2">
-                <h1>
-                  {{
-                    Number(expenseStore.totalAmount).toLocaleString('en-US', {
-                      style: 'currency',
-                      currency: 'PHP',
-                    })
-                  }}
-                </h1>
-                <h3>TOTAL AMOUNT</h3>
+                  {{ percent }}%
+                </v-progress-circular>
               </div>
-            </v-card>
-          </v-col>
-        </v-row>
+            </v-card-text>
+            <div class="text-center pb-4">
+              <h2 class="mb-0">
+                {{
+                  Number(expenseStore.totalAmount).toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: 'PHP',
+                  })
+                }}
+              </h2>
+              <strong class="text-grey">TOTAL AMOUNT</strong>
+            </div>
+          </v-card>
+        </div>
 
-        <v-row>
-          <v-col cols="12" md="6">
-            <v-card
-              v-for="expense in expenseStore.expenses"
-              :key="expense.id"
-              max-width="500"
-              class="ma-2"
-            >
-              <v-card-title class="d-flex justify-space-between"
-                ><p>
-                  <b>{{ expense.title }}</b>
-                </p>
-                <p class="text-">
-                  <strong>{{ expense.category }}</strong>
-                </p>
-              </v-card-title>
-              <v-card-text>
-                <p>{{ expense.description }}</p>
-                <strong class="text-h6">
-                  {{
-                    Number(expense.amount).toLocaleString('en-US', {
-                      style: 'currency',
-                      currency: 'PHP',
-                    })
-                  }}
-                </strong>
-              </v-card-text>
-              <v-divider></v-divider>
-              <v-card-actions class="d-flex justify-space-between">
-                <p>{{ expense.date }}</p>
-                <div class="d-flex align-center">
-                  <v-btn icon @click="expenseStore.deleteExpense(expense.id)" color="red">
-                    <v-icon>mdi-trash-can-outline</v-icon>
-                  </v-btn>
-                  <v-btn icon @click="openEditDialog(expense.id)">
-                    <v-icon>mdi-pencil-outline</v-icon>
-                  </v-btn>
-                </div>
-              </v-card-actions>
-            </v-card>
-          </v-col>
-        </v-row>
+        <!-- Scrollable Expense List -->
+        <div class="expense-section mt-2">
+          <v-card v-for="expense in expenseStore.expenses" :key="expense.id" class="mb-4 mx-2">
+            <v-card-title class="d-flex justify-space-between">
+              <b>{{ expense.title }}</b>
+              <v-chip variant="outlined" :color="getCategoryColor(expense.category)">{{
+                expense.category
+              }}</v-chip>
+            </v-card-title>
+            <v-card-text>
+              <p>{{ expense.description }}</p>
+              <strong class="text-h6">
+                {{
+                  Number(expense.amount).toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: 'PHP',
+                  })
+                }}
+              </strong>
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions class="d-flex justify-space-between">
+              <small>{{ expense.date }}</small>
+              <div class="d-flex align-center">
+                <v-btn icon @click="deleteItem(expense.id)" color="red">
+                  <v-icon>mdi-trash-can-outline</v-icon>
+                </v-btn>
+                <v-btn icon @click="openEditDialog(expense.id)">
+                  <v-icon>mdi-pencil-outline</v-icon>
+                </v-btn>
+              </div>
+            </v-card-actions>
+          </v-card>
+        </div>
       </v-container>
       <v-fab icon @click="addExpense = true" class="fab-bottom-center" color="cyan-darken-3" ripple>
         <v-icon>mdi-plus</v-icon>
@@ -134,5 +138,22 @@ const openEditDialog = (id) => {
   bottom: 32px; /* adjust as needed */
   transform: translateX(-50%);
   z-index: 1000;
+}
+
+.mobile-layout {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.progress-section {
+  flex-shrink: 0;
+  padding: 16px;
+  border-bottom: 1px solid #ddd;
+}
+
+.expense-section {
+  flex: 1;
+  overflow-y: auto;
 }
 </style>
