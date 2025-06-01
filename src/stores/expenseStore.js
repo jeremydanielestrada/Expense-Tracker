@@ -6,6 +6,7 @@ export const useExpenseStore = defineStore('expenseStore', () => {
   //States
   const expenses = ref([])
   const isLoading = ref(false)
+  const predefinedCategories = ['Foods', 'Bill', 'Others']
 
   //Getters
 
@@ -26,13 +27,15 @@ export const useExpenseStore = defineStore('expenseStore', () => {
   })
 
   // Category percentages
+  // Loop the predifned categories if there is no item added yet
   const categoryPercentages = computed(() => {
     const total = totalAmount.value
     const breakdown = categoryBreakdown.value
     const percentages = {}
 
-    for (const category in breakdown) {
-      percentages[category] = total > 0 ? ((breakdown[category] / total) * 100).toFixed(1) : 0
+    for (const category of predefinedCategories) {
+      const value = breakdown[category] || 0
+      percentages[category] = total > 0 ? (value / total) * 100 : 0
     }
 
     return percentages
@@ -117,6 +120,7 @@ export const useExpenseStore = defineStore('expenseStore', () => {
     totalAmount,
     categoryBreakdown,
     categoryPercentages,
+    predefinedCategories,
     getAllExpenses,
     addExpenses,
     updateExpense,

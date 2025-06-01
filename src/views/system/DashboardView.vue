@@ -12,11 +12,11 @@ const addExpense = ref(false)
 const editExpense = ref(false)
 const selectedExpenseId = ref(null)
 
-const isItemeDeleted = ref(true)
+const isItemeDeleted = ref(false)
 
 const deleteItem = async () => {
   try {
-    await expenseStore.deleteExpense(expenseId)
+    await expenseStore.deleteExpense()
     isItemeDeleted.value = true
   } catch {
     isItemeDeleted.value = false
@@ -65,9 +65,9 @@ const openEditDialog = (id) => {
                   :model-value="percent"
                   :size="80"
                   :width="10"
-                  :color="getCategoryColor(category)"
+                  :color="percent === 0 ? 'grey' : getCategoryColor(category)"
                 >
-                  {{ percent }}%
+                  {{ percent.toFixed(1) }}%
                 </v-progress-circular>
               </div>
             </v-card-text>
@@ -109,7 +109,7 @@ const openEditDialog = (id) => {
             <v-card-actions class="d-flex justify-space-between">
               <small>{{ expense.date }}</small>
               <div class="d-flex align-center">
-                <v-btn icon @click="deleteItem(expense.id)" color="red">
+                <v-btn icon @click="expenseStore.deleteExpense(expense.id)" color="red">
                   <v-icon>mdi-trash-can-outline</v-icon>
                 </v-btn>
                 <v-btn icon @click="openEditDialog(expense.id)">
