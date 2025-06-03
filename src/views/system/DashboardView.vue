@@ -19,8 +19,14 @@ const deleteItem = async (id) => {
   try {
     await expenseStore.deleteExpense(id)
     successDelete.value = true
+    setTimeout(() => {
+      successDelete.value = false
+    }, 2000)
   } catch {
     errorDelete.value = true
+    setTimeout(() => {
+      errorDelete.value = false
+    }, 2000)
   }
 }
 
