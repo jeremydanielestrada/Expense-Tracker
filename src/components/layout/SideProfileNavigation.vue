@@ -60,6 +60,10 @@ const onLogout = async () => {
             }}
           </span>
         </v-avatar>
+        <div class="d-inline">
+          <strong class="ma-1">{{ authStore.userData.firstname }}</strong>
+          <strong>{{ authStore.userData.lastname }}</strong>
+        </div>
       </v-list-item>
 
       <v-list-item>

@@ -3,7 +3,7 @@ const props = defineProps(['succesDelete', 'errorDelete'])
 </script>
 
 <template>
-  <div :class="props.succesDelete || props.errorDelete ? '  position-sticky' : ''">
+  <div :class="props.succesDelete || props.errorDelete ? 'position-fixed' : ''">
     <v-alert
       v-if="props.succesDelete"
       title="Succesfuly Deleted"
@@ -11,6 +11,7 @@ const props = defineProps(['succesDelete', 'errorDelete'])
       variant="tonal"
       density="compact"
       border="start"
+      color="cyan-accent-3"
       closable
     >
     </v-alert>
@@ -28,4 +29,10 @@ const props = defineProps(['succesDelete', 'errorDelete'])
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.position-fixed {
+  z-index: 1000;
+  right: 0;
+  left: 0;
+}
+</style>
