@@ -12,14 +12,15 @@ const addExpense = ref(false)
 const editExpense = ref(false)
 const selectedExpenseId = ref(null)
 
-const isItemeDeleted = ref(false)
+const successDelete = ref(false)
+const errorDelete = ref(false)
 
-const deleteItem = async () => {
+const deleteItem = async (id) => {
   try {
-    await expenseStore.deleteExpense()
-    isItemeDeleted.value = true
+    await expenseStore.deleteExpense(id)
+    successDelete.value = true
   } catch {
-    isItemeDeleted.value = false
+    errorDelete.value = true
   }
 }
 
@@ -47,8 +48,8 @@ const openEditDialog = (id) => {
   <AppLayout>
     <template #content>
       <AlertNotifications
-        :succes-delete="isItemeDeleted"
-        :error-delete="isItemeDeleted"
+        :succes-delete="successDelete"
+        :error-delete="errorDelete"
       ></AlertNotifications>
       <v-container fluid class="mobile-layout pa-0">
         <!-- Fixed Progress Section -->
@@ -109,7 +110,7 @@ const openEditDialog = (id) => {
             <v-card-actions class="d-flex justify-space-between">
               <small>{{ expense.date }}</small>
               <div class="d-flex align-center">
-                <v-btn icon @click="expenseStore.deleteExpense(expense.id)" color="red">
+                <v-btn icon @click="deleteItem(expense.id)" color="red">
                   <v-icon>mdi-trash-can-outline</v-icon>
                 </v-btn>
                 <v-btn icon @click="openEditDialog(expense.id)">

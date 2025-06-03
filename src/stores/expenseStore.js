@@ -9,7 +9,6 @@ export const useExpenseStore = defineStore('expenseStore', () => {
   const predefinedCategories = ['Foods', 'Bill', 'Others']
 
   //Getters
-
   // Total amount of all expenses
   const totalAmount = computed(() => {
     return expenses.value.reduce((sum, item) => sum + Number(item.amount), 0)
