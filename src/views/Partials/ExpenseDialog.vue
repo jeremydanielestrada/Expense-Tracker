@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue'
 import { useExpenseStore } from '@/stores/expenseStore'
 import { requiredValidator } from '@/utils/validators'
-
+import AlertNotifications from '@/components/commons/AlertNotifications.vue'
 //Load variables
 const props = defineProps(['modelValue', 'itemData'])
 const emits = defineEmits(['update:modelValue'])
@@ -23,6 +23,8 @@ const formDataDefault = {
   description: null,
   date: new Date().toISOString(),
 }
+const isAdded = ref(false)
+const isError = ref(false)
 
 const isUpdate = ref(false)
 
@@ -50,8 +52,10 @@ const handleSubmit = async () => {
       : await expenseStore.addExpenses(formData.value)
     formData.value = { ...formDataDefault }
     close()
+    isAdded.value = true
   } catch (err) {
     console.error('Failed to add expense', err)
+    isError.value = true
   } finally {
     isLoading.value = false
     await expenseStore.getAllExpenses()
@@ -60,6 +64,11 @@ const handleSubmit = async () => {
 </script>
 
 <template>
+  <AlertNotifications
+    :title="isUpdate ? 'Successfully Updated Item' : 'Successfully Added item'"
+    :success="isAdded"
+    :error="isError"
+  ></AlertNotifications>
   <v-dialog
     width="500px"
     persistent

@@ -10,8 +10,8 @@ const expenseStore = useExpenseStore()
 
 const isDialogVisible = ref(false)
 
-const successDelete = ref(false)
-const errorDelete = ref(false)
+const success = ref(false)
+const error = ref(false)
 
 const itemData = ref(null)
 
@@ -28,14 +28,14 @@ const updateItem = (item) => {
 const deleteItem = async (id) => {
   try {
     await expenseStore.deleteExpense(id)
-    successDelete.value = true
+    success.value = true
     setTimeout(() => {
-      successDelete.value = false
+      success.value = false
     }, 2000)
   } catch {
-    errorDelete.value = true
+    error.value = true
     setTimeout(() => {
-      errorDelete.value = false
+      error.value = false
     }, 2000)
   }
 }
@@ -59,8 +59,9 @@ function getCategoryColor(category) {
   <AppLayout>
     <template #content>
       <AlertNotifications
-        :succes-delete="successDelete"
-        :error-delete="errorDelete"
+        title="Deleted SuccesFully"
+        :success="success"
+        :error="error"
       ></AlertNotifications>
       <v-container fluid class="mobile-layout pa-0">
         <!-- Fixed Progress Section -->
