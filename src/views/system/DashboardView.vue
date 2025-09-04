@@ -13,6 +13,8 @@ const isDialogVisible = ref(false)
 const success = ref(false)
 const error = ref(false)
 
+const isDeleting = ref(false)
+
 const itemData = ref(null)
 
 const addExpense = () => {
@@ -26,6 +28,7 @@ const updateItem = (item) => {
 }
 
 const deleteItem = async (id) => {
+  isDeleting.value = true
   try {
     await expenseStore.deleteExpense(id)
     success.value = true
@@ -122,7 +125,7 @@ function getCategoryColor(category) {
             <v-card-actions class="d-flex justify-space-between">
               <small>{{ expense.date }}</small>
               <div class="d-flex align-center">
-                <v-btn icon @click="deleteItem(expense.id)" color="red">
+                <v-btn icon @click="deleteItem(expense.id)" color="red" :loading="isDeleting">
                   <v-icon>mdi-trash-can-outline</v-icon>
                 </v-btn>
                 <v-btn icon @click="updateItem(expense)">
