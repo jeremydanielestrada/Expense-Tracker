@@ -2,18 +2,28 @@
 import { ref, onMounted } from 'vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { useExpenseStore } from '@/stores/expenseStore'
-import EditExpenseDialog from '../partials/EditExpenseDialog.vue'
 import ExpenseDialog from '../partials/ExpenseDialog.vue'
 import AlertNotifications from '@/components/commons/AlertNotifications.vue'
 
+//Load variables
 const expenseStore = useExpenseStore()
 
-const addExpense = ref(false)
-const editExpense = ref(false)
-const selectedExpenseId = ref(null)
+const isDialogVisible = ref(false)
 
 const successDelete = ref(false)
 const errorDelete = ref(false)
+
+const itemData = ref(null)
+
+const addExpense = () => {
+  isDialogVisible.value = true
+  itemData.value = null
+}
+
+const updateItem = (item) => {
+  itemData.value = item
+  isDialogVisible.value = true
+}
 
 const deleteItem = async (id) => {
   try {
@@ -42,11 +52,6 @@ function getCategoryColor(category) {
     Others: 'light-blue-accent-3',
   }
   return colorMap[category] || 'cyan-accent-3'
-}
-
-const openEditDialog = (id) => {
-  selectedExpenseId.value = id
-  editExpense.value = true
 }
 </script>
 
@@ -119,7 +124,7 @@ const openEditDialog = (id) => {
                 <v-btn icon @click="deleteItem(expense.id)" color="red">
                   <v-icon>mdi-trash-can-outline</v-icon>
                 </v-btn>
-                <v-btn icon @click="openEditDialog(expense.id)">
+                <v-btn icon @click="updateItem(expense)">
                   <v-icon>mdi-pencil-outline</v-icon>
                 </v-btn>
               </div>
@@ -127,13 +132,12 @@ const openEditDialog = (id) => {
           </v-card>
         </div>
       </v-container>
-      <v-fab icon @click="addExpense = true" class="fab-bottom-center" color="cyan-darken-3" ripple>
+      <v-fab icon @click="addExpense()" class="fab-bottom-center" color="cyan-darken-3" ripple>
         <v-icon>mdi-plus</v-icon>
       </v-fab>
 
       <!-- Dialogs -->
-      <ExpenseDialog v-model="addExpense"></ExpenseDialog>
-      <EditExpenseDialog v-model="editExpense" :expenseId="selectedExpenseId"></EditExpenseDialog>
+      <ExpenseDialog v-model="isDialogVisible" :itemData="itemData"></ExpenseDialog>
     </template>
   </AppLayout>
 </template>

@@ -1,11 +1,10 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useExpenseStore } from '@/stores/expenseStore'
 import { requiredValidator } from '@/utils/validators'
 
-const props = defineProps({
-  modelValue: Boolean,
-})
+//Load variables
+const props = defineProps(['modelValue', 'itemData'])
 const emits = defineEmits(['update:modelValue'])
 
 //Close the modal after submission
@@ -17,30 +16,45 @@ const isLoading = ref(false)
 const categoryOptions = ['Foods', 'Bill', 'Others']
 
 //Load variable
-const formData = ref({
+const formDataDefault = {
   title: null,
   amount: null,
   category: null,
   description: null,
   date: new Date().toISOString(),
+}
+
+const isUpdate = ref(false)
+
+const formData = ref({
+  ...formDataDefault,
 })
 
-const resetFormData = ref({
-  ...formData,
-})
+//Check if item has a data
+watch(
+  () => props.itemData,
+  () => {
+    isUpdate.value = props.itemData ? true : false
+    formData.value = props.itemData ? { ...props.itemData } : { ...formDataDefault }
+  },
+)
 
 // Add Expense Function
-const addExpense = async () => {
+const handleSubmit = async () => {
+  //reset form
   isLoading.value = true
+
   try {
-    await expenseStore.addExpenses(formData.value)
-    // Reset form
-    resetFormData.value
+    isUpdate.value
+      ? await expenseStore.updateExpense(formData.value)
+      : await expenseStore.addExpenses(formData.value)
+    formData.value = { ...formDataDefault }
     close()
   } catch (err) {
     console.error('Failed to add expense', err)
   } finally {
     isLoading.value = false
+    await expenseStore.getAllExpenses()
   }
 }
 </script>
@@ -48,12 +62,13 @@ const addExpense = async () => {
 <template>
   <v-dialog
     width="500px"
+    persistent
     :model-value="props.modelValue"
     @update:modelValue="emits('update:modelValue', $event)"
   >
     <v-card class="pa-3">
       <v-card-title>Add Expense</v-card-title>
-      <v-form fast-fail @submit.prevent="addExpense">
+      <v-form fast-fail @submit.prevent="handleSubmit">
         <v-select
           label="Select Category"
           :items="categoryOptions"
@@ -73,7 +88,9 @@ const addExpense = async () => {
           clearable
           :rules="[requiredValidator]"
         />
-        <v-btn block color="cyan-darken-3" type="submit" :loading="isLoading"> Add </v-btn>
+        <v-btn block color="cyan-darken-3" type="submit" :loading="isLoading">
+          {{ isUpdate ? 'Update' : 'Add' }}
+        </v-btn>
       </v-form>
       <v-card-actions>
         <v-btn @click="close">Close</v-btn>

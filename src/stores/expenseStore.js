@@ -82,9 +82,14 @@ export const useExpenseStore = defineStore('expenseStore', () => {
   }
 
   //Update an expense
-  async function updateExpense(id, updates) {
-    const { data, error } = await supabase.from('expenses').update(updates).eq('id', id).select()
+  async function updateExpense(formData) {
+    const { data, error } = await supabase
+      .from('expenses')
+      .update(formData)
+      .eq('id', formData.id)
+      .select()
 
+    await getAllExpenses()
     if (error) throw new Error('Failed to update Expense')
     return data
   }
