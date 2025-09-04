@@ -34,9 +34,8 @@ onMounted(() => {
   <v-responsive>
     <v-app :theme="theme">
       <v-app-bar class="px-3" :color="theme === 'light' ? 'cyan-accent-2' : 'cyan-darken-2'" border>
-        <v-btn icon size="large" @click="drawerOpen = !drawerOpen" v-if="isLoggedIn">
-          <v-icon> mdi-account-outline</v-icon>
-        </v-btn>
+        <v-app-bar-nav-icon @click="drawerOpen = !drawerOpen" v-if="isLoggedIn">
+        </v-app-bar-nav-icon>
 
         <v-spacer></v-spacer>
 
