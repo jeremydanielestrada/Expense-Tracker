@@ -8,9 +8,10 @@ import { getAvatarText } from '@/utils/helpers'
 const emits = defineEmits(['update:isDrawerVisible'])
 const props = defineProps(['isDrawerVisible'])
 
-const drawer = computed({
+// Computed property for drawer visibility
+const drawerVisible = computed({
   get: () => props.isDrawerVisible,
-  set: (val) => emits('update:isDrawerVisible', val),
+  set: (value) => emits('update:isDrawerVisible', value),
 })
 
 // Utilize pre-defined vue functions
@@ -43,12 +44,7 @@ const onLogout = async () => {
 </script>
 
 <template>
-  <v-navigation-drawer
-    v-model="drawer"
-    temporary
-    app
-    @update:modelValue="emits('update:isDrawerVisible', $event)"
-  >
+  <v-navigation-drawer v-model="drawerVisible" temporary app>
     <v-list>
       <v-list-item>
         <v-avatar color="cyan-accent-2" size="large">

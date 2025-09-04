@@ -63,6 +63,7 @@ const isPasswordConfirmVisible = ref(false)
         <v-text-field
           v-model="formData.password_confirmation"
           label="Password Confirmation"
+          prepend-inner-icon="mdi-lock-outline"
           :type="isPasswordConfirmVisible ? 'text' : 'password'"
           :append-inner-icon="isPasswordConfirmVisible ? 'mdi-eye-off' : 'mdi-eye'"
           @click:append-inner="isPasswordConfirmVisible = !isPasswordConfirmVisible"

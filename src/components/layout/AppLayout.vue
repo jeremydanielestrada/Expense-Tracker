@@ -4,7 +4,7 @@ import { useAuthUserStore } from '@/stores/authStore'
 import { onMounted } from 'vue'
 import SideProfileNavigation from '@/components/layout/SideProfileNavigation.vue'
 
-const isSideNavigation = ref(false)
+const drawerOpen = ref(false)
 
 //Use Pinia Store
 const authStore = useAuthUserStore()
@@ -34,7 +34,7 @@ onMounted(() => {
   <v-responsive>
     <v-app :theme="theme">
       <v-app-bar class="px-3" :color="theme === 'light' ? 'cyan-accent-2' : 'cyan-darken-2'" border>
-        <v-btn icon size="large" @click="isSideNavigation = !isSideNavigation" v-if="isLoggedIn">
+        <v-btn icon size="large" @click="drawerOpen = !drawerOpen" v-if="isLoggedIn">
           <v-icon> mdi-account-outline</v-icon>
         </v-btn>
 
@@ -51,7 +51,7 @@ onMounted(() => {
 
       <SideProfileNavigation
         v-if="isLoggedIn"
-        :isDrawerVisible="isSideNavigation"
+        v-model:isDrawerVisible="drawerOpen"
       ></SideProfileNavigation>
       <v-main>
         <slot name="content"></slot>
