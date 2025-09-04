@@ -51,7 +51,7 @@ export const useExpenseStore = defineStore('expenseStore', () => {
   }
 
   //Add expenses
-  async function addExpenses({ title, amount, category, description, date }) {
+  async function addExpenses(formData) {
     const {
       data: { user },
       error: userError,
@@ -67,11 +67,7 @@ export const useExpenseStore = defineStore('expenseStore', () => {
       .insert([
         {
           user_id: user.id,
-          title,
-          amount: Number(amount),
-          category,
-          date: date || new Date().toISOString(),
-          description,
+          ...formData,
         },
       ])
       .select()

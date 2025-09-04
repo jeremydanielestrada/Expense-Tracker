@@ -7,51 +7,35 @@ const props = defineProps({
   modelValue: Boolean,
 })
 const emits = defineEmits(['update:modelValue'])
+
+//Close the modal after submission
 const close = () => emits('update:modelValue', false)
 
 const expenseStore = useExpenseStore()
 const isLoading = ref(false)
 
-//Load variables
+const categoryOptions = ['Foods', 'Bill', 'Others']
 
-// const formattedDateTime = new Date(formDataDefault.value.date).toLocaleString('en-US', {
-//   year: 'numeric',
-//   month: 'short',
-//   day: 'numeric',
-// })
-
-// Form data
+//Load variable
 const formData = ref({
-  title: '',
-  amount: '',
-  categoryOptions: ['Foods', 'Bill', 'Others'],
-  categorySelected: '',
-  description: '',
+  title: null,
+  amount: null,
+  category: null,
+  description: null,
   date: new Date().toISOString(),
 })
 
-//Add Expense Function
+const resetFormData = ref({
+  ...formData,
+})
 
 // Add Expense Function
 const addExpense = async () => {
   isLoading.value = true
   try {
-    await expenseStore.addExpenses({
-      title: formData.value.title,
-      amount: formData.value.amount,
-      category: formData.value.categorySelected,
-      date: formData.value.date,
-      description: formData.value.description,
-    })
+    await expenseStore.addExpenses(formData.value)
     // Reset form
-    formData.value = {
-      title: '',
-      amount: '',
-      categoryOptions: ['Foods', 'Bill', 'Others'],
-      categorySelected: '',
-      description: '',
-      date: new Date().toISOString(),
-    }
+    resetFormData.value
     close()
   } catch (err) {
     console.error('Failed to add expense', err)
@@ -72,8 +56,8 @@ const addExpense = async () => {
       <v-form fast-fail @submit.prevent="addExpense">
         <v-select
           label="Select Category"
-          :items="formData.categoryOptions"
-          v-model="formData.categorySelected"
+          :items="categoryOptions"
+          v-model="formData.category"
           :rules="[requiredValidator]"
         />
         <v-text-field label="Title" v-model="formData.title" :rules="[requiredValidator]" />
