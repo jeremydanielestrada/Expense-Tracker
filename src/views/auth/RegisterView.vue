@@ -8,8 +8,8 @@ import AppLayout from '@/components/layout/AppLayout.vue'
     <template #content>
       <v-container class="pa-0">
         <v-row>
-          <v-col cols="12" lg="4" class="pt-16">
-            <v-card class="mx-auto" elevation="0" max-width="600">
+          <v-col cols="12" lg="4" class="pt-16 mx-auto">
+            <v-card elevation="0" max-width="600">
               <v-card-title class="text-center">
                 <h3 class="font-weight-black mt-5">Registration</h3>
               </v-card-title>

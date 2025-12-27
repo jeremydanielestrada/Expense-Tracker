@@ -28,25 +28,33 @@ export function useRegister() {
     // Reset Form Action utils
     formAction.value = { ...formActionDefault, formProcess: true }
 
+    // DEBUG: Log the signup attempt
+    console.log('Attempting signup with:', formData.value.email)
+
+    // TRY SIMPLE VERSION FIRST (without metadata)
     const { data, error } = await supabase.auth.signUp({
       email: formData.value.email,
       password: formData.value.password,
+      // Uncomment this after testing if simple version works:
       options: {
         data: {
-          firstname: formData.value.firstname,
-          lastname: formData.value.lastname,
-          is_admin: false, // Just turn to true if super admin account
-          // role: 'Administrator' // If role based; just change the string based on role
+          first_name: formData.value.firstname, // Use snake_case
+          last_name: formData.value.lastname,
         },
       },
     })
 
+    // DEBUG: Log the full response
+    console.log('Signup response:', { data, error })
+
     if (error) {
       // Add Error Message and Status Code
+      console.error('Signup error details:', error)
       formAction.value.formErrorMessage = error.message
       formAction.value.formStatus = error.status
     } else if (data) {
       // Add Success Message
+      console.log('Signup successful:', data)
       formAction.value.formSuccessMessage = 'Successfully Registered Account.'
       // Redirect Acct to Dashboard
       router.replace('/dashboard')
