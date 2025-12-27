@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { useExpenseStore } from '@/stores/expenseStore'
-import ExpenseDialog from '../partials/ExpenseDialog.vue'
+import ExpenseDialog from '@/views/partials/ExpenseDialog.vue'
 import AlertNotifications from '@/components/commons/AlertNotifications.vue'
 
 //Load variables
